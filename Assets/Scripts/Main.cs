@@ -76,7 +76,7 @@ public class Main : MonoBehaviour
         {
             PupilLabs.EyeTrackingDataManager.StopRecording();
             writer.Close();
-            GuideText.text = $"Finish!\n\nLast Ratio: {currentRatio}";
+            GuideText.text = $"Finish!\n\nLast Ratio: {Math.Abs(currentRatio)}";
             GuideText.enabled = true;
             phase++;
         }
