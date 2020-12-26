@@ -7,7 +7,7 @@ public class VIVECamFix : MonoBehaviour
 
 	void Start ()
     {
-		target.transform.position = new Vector3(0, 5, 0);
+		target.transform.position = new Vector3(0, 0, 0);
 		target.transform.rotation = Quaternion.Euler(0, 0, 0);
 
 		XRDevice.DisableAutoXRCameraTracking(target, true);

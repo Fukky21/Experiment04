@@ -134,7 +134,7 @@ public class Main : MonoBehaviour
         string data = "";
         data += $"{currentTrial} {currentRatio} {ConvertBoolToInt(fixationPointMoveToRight)}";
         data += $" {ConvertBoolToInt(topBeltMoveToRight)} {ConvertBoolToInt(currentRespUp)}";
-        data += $"  {onsetTime}";
+        data += $" {onsetTime}";
         await writer.WriteLineAsync(data);
     }
 
@@ -206,13 +206,12 @@ public class Main : MonoBehaviour
                 // FixationPointの初期位置を決定する
                 if (fixationPointMoveToRight)
                 {
-                    fixationPointTransform.position = new Vector3(-Tan(Settings.fixationPointInitialPosition), 0, 1);
+                    fixationPointTransform.localPosition = new Vector3(-Tan(Settings.fixationPointInitialPosition), 0, 1);
                 }
                 else
                 {
-                    fixationPointTransform.position = new Vector3(Tan(Settings.fixationPointInitialPosition), 0, 1);
+                    fixationPointTransform.localPosition = new Vector3(Tan(Settings.fixationPointInitialPosition), 0, 1);
                 }
-
                 GuideText.enabled = false;
                 FixationPoint.SetActive(true);
                 step++;
@@ -229,11 +228,13 @@ public class Main : MonoBehaviour
                 fixationPointTransform.Translate(-Tan(Settings.fixationPointSpeed) * Time.deltaTime, 0, 0);
             }
 
-            if (Math.Abs(fixationPointTransform.position.x) < 1.0)
+            localTime += Time.deltaTime;
+            if (localTime > Settings.stimulusPresentationWaitingTime)
             {
-                // 固視点が中心付近に来たら、ベルトを表示する
                 onsetTime = time;
                 localTime = 0;
+                TopBelt.SetActive(true);
+                BottomBelt.SetActive(true);
                 step++;
             }
         }
@@ -284,7 +285,7 @@ public class Main : MonoBehaviour
                 step++;
             }
         }
-        else if (step == 5) // トライアル終了判定 OR 階段法処理
+        else if (step == 4) // トライアル終了判定 OR 階段法処理
         {
             if (currentTrial == Settings.trials) // 規定のトライアル数を終えたら終了
             {
@@ -324,6 +325,7 @@ public class Main : MonoBehaviour
                 // 初期化処理
                 topBeltTransform.localPosition = new Vector3(0, 0.1f, 1);
                 bottomBeltTransform.localPosition = new Vector3(0, -0.1f, 1);
+                localTime = 0;
                 currentTrial++;
                 GuideText.text = $"{currentTrial}/{Settings.trials}";
                 GuideText.enabled = true;
